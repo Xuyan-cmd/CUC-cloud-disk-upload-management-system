@@ -1,0 +1,23 @@
+/* iconfont */
+@import 'https://at.alicdn.com/t/font_2594789_b8tpbi3b8yk.css?spm=a313x.7781069.1998910419.47&file=font_2594789_b8tpbi3b8yk.css';
+
+@import './normalize.css';
+
+@import './element.css';
+
+input:focus {
+  border:1px solid #595bb3 !important;
+  outline: none;
+}
+
+input {
+  color: rgb(65, 65, 65);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #ccc;
+}

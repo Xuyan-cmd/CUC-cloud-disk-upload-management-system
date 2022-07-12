@@ -1,0 +1,30 @@
+{
+  "name": "cloudspace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "clipboard": "^2.0.8",
+    "core-js": "^3.14.0",
+    "element-ui": "^2.15.2",
+    "qs": "^6.10.1",
+    "vue": "^2.6.13",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.13",
+    "@vue/cli-plugin-router": "^4.5.13",
+    "@vue/cli-plugin-vuex": "^4.5.13",
+    "@vue/cli-service": "^4.5.13",
+    "less": "^3.13.1",
+    "less-loader": "^5.0.0",
+    "vue-template-compiler": "^2.6.13"
+  },
+  "author": "CodeMan",
+  "license": "MIT"
+}

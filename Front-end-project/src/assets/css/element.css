@@ -1,0 +1,121 @@
+.el-popover {
+    min-width: 50px !important;
+    padding: 0;
+  border: 1px solid #595bb3;
+  overflow: hidden;
+}
+
+.el-slider__bar {
+    background-color: #7475ca;
+}
+
+.el-slider__runway {
+    margin: 0;
+}
+
+.el-slider__button {
+    border: 2px solid #595bb3;
+    width: 10px;
+    height: 10px;
+}
+
+.el-button:focus {
+    background-color: unset !important;
+    color:#606266 !important;
+    border: 1px solid #ccc !important;
+}
+
+/* .el-dialog {
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  } */
+
+  .el-main {
+      padding: 0;
+  }
+
+  .el-dialog__close:hover {
+    color: #595bb3 !important;
+  }
+
+.el-button:hover {
+    background-color: #595bb3;
+    color: white;
+    border: 1px solid #585bb3;
+  }
+  
+.el-button:focus {
+    background-color: #fff !important;
+    color: #606266 !important;
+    border: 1px solid #dcdfe6 !important;
+  }
+  
+.el-button--primary {
+    background-color: #696bcc;
+    border: 1px solid #696bcc;
+  }
+  
+.el-button--primary:focus {
+    background-color: #595bb3 !important;
+    color: white !important;
+    border: 1px solid #585bb3 !important;
+  }
+
+.el-input__inner:focus{
+    border-color:#595bb3;
+}
+
+/* dragImgContainer的样式，因为vue中的scoped会导致后插入的样式无效 */
+.dragImgContainer {
+    height: 90px;
+    width: 90px;
+    position: fixed;
+    display: none;
+    z-index: 5000;
+    user-select: none;
+  }
+  
+  .showDragImgContainer {
+    display: block;
+  }
+  
+  .dragImgContainer img, .dragImgContainer video{
+    max-height: 80%;
+    max-width: 80%;
+    position: absolute;
+    transform-origin: 50% 100%;
+    border-radius: 5px;
+  }
+  
+  .dragImgContainer img:nth-child(1),.dragImgContainer video:nth-child(1) {
+    z-index: 10;
+  }
+  
+  .dragImgContainer img:nth-child(2),.dragImgContainer video:nth-child(2) {
+    z-index: 5;
+    transform: rotate(-15deg);
+  }
+  
+  .dragImgContainer img:nth-child(3),.dragImgContainer video:nth-child(3) {
+    z-index: 1;
+    transform: rotate(15deg);
+  }
+
+  .shareDialog {
+      font-size: 13px;
+      color: rgb(114, 114, 114);
+      border-radius: 10px;
+  }
+
+  .shareDialog .el-dialog__title {
+      font-size: 15px;
+  }
+
+  .shareDialog .dialog-footer ,.shareDialog .el-dialog__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
