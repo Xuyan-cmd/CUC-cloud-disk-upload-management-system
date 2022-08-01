@@ -41,7 +41,7 @@
         {{ currentTime | handleTime }} /
         {{
           $refs.currentMusicPlayer &&
-          $refs.currentMusicPlayer.duration | handleTime
+            $refs.currentMusicPlayer.duration | handleTime
         }}
       </div>
       <el-slider
@@ -55,6 +55,7 @@
 
 <script>
 import { handleTime } from "plugins/utils.js";
+import { MessageBox } from "element-ui";
 
 export default {
   name: "MusicPlayer",
@@ -76,6 +77,7 @@ export default {
       currentTime: 0,
       // 音频url
       audioUrl: "",
+      passcheckState: false,
     };
   },
   methods: {
@@ -149,20 +151,54 @@ export default {
 
     // 获取音频的url
     async getAudioUrl() {
+      console.log("this.currentMusicInfo", this.currentMusicInfo.encryption);
+      let passcheck = false;
+      if (this.currentMusicInfo.encryption === "2") {
+        MessageBox.prompt("请输入密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+        }).then(({ value }) => {
+          this.currentMusicInfo.pass = value;
+          this.jiemi(this.currentMusicInfo);
+        });
+      }else{
+        this.playVedio();
+      }
+    },
+    // 解密
+    async jiemi(data) {
+      let r = await this.$request(
+        "/educenter/file/decrypt",
+        data,
+        "post",
+        "params"
+      );
+      let state;
+      console.log(123, r);
+      state = r.data.success;
+      if (state) {
+        this.playVedio();
+      } else {
+        this.closeMusicPlayer();
+        this.$message.error("文件密码输入错误,不能播放");
+      }
+    },
+    async playVedio() {
       let res = await this.$request(
         `/eduoss/fileoss/getPlayAuth?isList=${this.currentMusicInfo.videoId}`,
         "",
         "post"
       );
-      console.log(res);
       this.audioUrl = res.data.data.urlList[0].url;
     },
   },
+
   watch: {
     // 监听vuex中的当前音频播放信息
     async "$store.state.currentMusicInfo"(current) {
       this.currentMusicInfo = current;
       if (this.$store.state.isMusicPlayerShow) {
+        this.$store.state.isMusicPlayerShow = false;
         this.getAudioUrl();
         await this.$store.commit("updateIsMusicPlayerShow", true);
       }

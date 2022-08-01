@@ -15,7 +15,8 @@ module.exports = {
         proxy: {
             '/api': {
                 // target: 'http://120.79.189.150:8001',
-                target: 'http://www.codeman.ink:8001',
+                // target: 'http://www.codeman.ink:8001',
+                target: 'http://127.0.0.1:8001',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
@@ -23,15 +24,18 @@ module.exports = {
                 }
             },
             '/downloadfile': {
-                target: 'https://chen110.oss-cn-guangzhou.aliyuncs.com',
+                // target: 'https://chen110.oss-cn-guangzhou.aliyuncs.com',
+                target: 'https://cucinstall.oss-cn-hangzhou.aliyuncs.com',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
                     '^/downloadfile': ''
                 }
             },
+   
             '/downloadvideo': {
-                target: 'https://outin-cefd5d83abc511ebb0a800163e1a625e.oss-cn-shanghai.aliyuncs.com',
+                // target: 'https://outin-cefd5d83abc511ebb0a800163e1a625e.oss-cn-shanghai.aliyuncs.com',
+                target: 'https://cucinstall.oss-cn-hangzhou.aliyuncs.com',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {

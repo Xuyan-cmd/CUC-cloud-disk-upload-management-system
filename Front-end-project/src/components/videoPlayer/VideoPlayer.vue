@@ -41,7 +41,6 @@ export default {
         "",
         "post"
       );
-      console.log(res);
       this.videoUrl = res.data.data.urlList[0].url;
     },
 

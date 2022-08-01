@@ -44,14 +44,64 @@
                   <el-input
                     v-model="registered.mobile"
                     placeholder="请输入手机号码"
-                  ></el-input>
+                    maxlength="11"
+                    show-word-limit
+                    onkeyup="value=value.replace(/\D/g,'')"
+                  >
+                    ></el-input
+                  >
                 </el-form-item>
                 <el-form-item>
                   <el-input
                     v-model="registered.password"
-                    placeholder="请输入密码"
+                    @input="checkPassLever"
                     type="password"
+                    placeholder="请输入密码"
+                    onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\-\_\.]/g,'')"
+                    maxlength="36"
+                    show-word-limit
                   ></el-input>
+                  <table
+                    border="0"
+                    align="center"
+                    style="width: 200px;margin-left: 0px"
+                  >
+                    <tr>
+                      <td width="60px">
+                        <el-progress
+                          :percentage="100"
+                          :color="tr1"
+                          :format="format"
+                        ></el-progress>
+                      </td>
+                      <td width="60px">
+                        <el-progress
+                          :percentage="100"
+                          :color="tr2"
+                          :format="format"
+                        ></el-progress>
+                      </td>
+                      <td width="60px">
+                        <el-progress
+                          :percentage="100"
+                          :color="tr3"
+                          :format="format"
+                        ></el-progress>
+                      </td>
+                      <td width="20px">
+                        <div
+                          class="strength"
+                          :style="{ color: fontColor }"
+                          v-if="
+                            registered.password !== '' &&
+                              registered.password !== undefined
+                          "
+                        >
+                          {{ strength }}
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
                 </el-form-item>
                 <el-form-item>
                   <el-input
@@ -96,7 +146,40 @@ let timer;
 export default {
   name: "Login",
   data() {
+    const checkPawd = (rule, value, callback) => {
+      checkPasswd(value).then((res) => {
+        if (res.msg !== "notCheck") {
+          this.notCheck = false;
+          if (res.msg === "低") {
+            this.fontColor = "red";
+            this.strength = this.indicator["red"];
+          }
+          if (res.msg === "中") {
+            this.fontColor = "orange";
+            this.strength = this.indicator["orange"];
+          }
+          if (res.msg === "高") {
+            this.fontColor = "blue";
+            this.strength = this.indicator["blue"];
+          }
+        } else {
+          this.notCheck = true;
+        }
+        callback();
+      });
+    };
     return {
+      tr1: "red",
+      tr2: "#FFFFFF",
+      tr3: "#FFFFFF",
+      notCheck: true,
+      fontColor: "red",
+      strength: "",
+      indicator: {
+        red: "低",
+        orange: "中",
+        blue: "高",
+      },
       login: {
         mobile: "",
         password: "",
@@ -116,6 +199,43 @@ export default {
     };
   },
   methods: {
+    format(percentage) {
+      return percentage === 100 ? "" : `${percentage}%`;
+    },
+    // 验证面膜等级
+    checkPassLever(value) {
+      // 红 蓝 绿
+      if (value.length == 1) {
+        this.tr2 = "#FFFFFF";
+        this.tr3 = "#FFFFFF";
+      }
+      if (value.length == 2) {
+        this.tr3 = "#FFFFFF";
+      }
+      if (value.length > 1) {
+        var pd1 = /[._-]/;
+        var pd2 = /[a-zA-Z]/;
+        var pd3 = /[0-9]/;
+        var x1 = pd1.test(value) && pd2.test(value);
+        var x2 = pd3.test(value) && pd2.test(value);
+        var x3 = pd1.test(value) && pd3.test(value);
+        if (x1 || x2 || x3) {
+          this.tr2 = "blue";
+        } else {
+          this.tr2 = "#FFFFFF";
+        }
+      }
+      if (value.length > 2) {
+        var zg2 = /^(?![^a-zA-Z]+$)(?!\D+$)(?![._-]+$)/;
+        var zg3 = /[._-]/;
+        if (zg2.test(value) && zg3.test(value)) {
+          this.tr3 = "green";
+        } else {
+          this.tr3 = "#FFFFFF";
+        }
+      }
+    },
+
     //   点击登录的回调
     async onSubmit() {
       let res = await this.$request(
@@ -224,7 +344,7 @@ export default {
 }
 
 .name {
-  color: #25262b;
+  color: #2b2525;
   font-size: 20px;
   letter-spacing: 4px;
   font-weight: bold;
@@ -327,5 +447,17 @@ export default {
 
 .countDown {
   color: rgb(141, 141, 141);
+}
+
+.el-progress {
+  width: 160%;
+}
+.strength {
+  font-size: 13px;
+  color: #271e25;
+  position: relative;
+  top: 5px;
+  left: 0;
+  transition: 0.5s all ease;
 }
 </style>

@@ -34,6 +34,10 @@
       <div class="group">
         <div class="rename" @click="$emit('showAttribute')">属性</div>
       </div>
+        <div class="group">
+        <div class="rename" @click="$emit('encryption')">加密</div>
+        <div class="rename" @click="$emit('sanlie')">下载散列值</div>
+      </div>
     </div>
 
     <!-- 文件夹点击右键的菜单框 -->
@@ -179,7 +183,7 @@ export default {
 }
 
 .group > div:hover {
-  background-color: #696bcc;
+  background-color: #1ea3e0;
   color: white;
 }
 </style>

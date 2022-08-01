@@ -26,3 +26,21 @@ const routes = [
   { path: '/login', component: Login },
 ]
 
+Vue.use(VueRouter)
+
+
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path != '/login' && !vuexIndex.state.userInfo) {
+    router.replace('/login')
+  }
+  next()
+})
+
+export default router

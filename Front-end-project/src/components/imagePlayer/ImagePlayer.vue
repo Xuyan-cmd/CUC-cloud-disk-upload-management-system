@@ -116,7 +116,6 @@ export default {
     },
 
     mousewheelFn(e) {
-      console.log(e);
       if (e.wheelDelta > 0 || e.detail < 0) {
         this.changeSize("large");
       } else {

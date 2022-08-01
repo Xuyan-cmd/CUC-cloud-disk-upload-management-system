@@ -13,7 +13,6 @@ Vue.prototype.$request = request;
 import 'assets/css/base.css'
 
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,

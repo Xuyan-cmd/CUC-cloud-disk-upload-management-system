@@ -6,7 +6,7 @@
 @import './element.css';
 
 input:focus {
-  border:1px solid #595bb3 !important;
+  border:1px solid #1e9fd2 !important;
   outline: none;
 }
 

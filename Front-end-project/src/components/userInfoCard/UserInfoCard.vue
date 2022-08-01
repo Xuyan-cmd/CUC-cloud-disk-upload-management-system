@@ -72,7 +72,7 @@
       width="500px"
       class="aboutDialog"
     >
-      本项目是和班里几位同学联合开发的项目。该项目实现了文件的上传，下载，文件的增删改查，文件夹，拖动，相册，收藏，图片、视频、音频在线预览等功能。在这个项目中，我负责的是网页端的开发，也就是当前demo所展示的，主要用到的技术栈是vue全家桶。后端的技术栈是springboot+mybatiesplus。
+      本项目是和班里几位同学联合开发的项目。该项目实现了文件的上传，下载，文件的增删改查，文件夹，拖动，相册，收藏，图片、视频、音频在线预览等功能。前端主要用到的技术栈是vue全家桶。后端的技术栈是springboot+mybatiesplus。本项目为初步实践项目，仅供学习参考，禁止商用。
     </el-dialog>
   </div>
 </template>
@@ -120,7 +120,6 @@ export default {
 
     // 上传成功的钩子
     async upload(response) {
-      console.log(response);
       if (!response.success) {
         this.$message.error("上传失败,请稍后重试!");
         return;
@@ -135,7 +134,6 @@ export default {
         "post",
         "params"
       );
-      console.log(res);
       if (res.data.success) {
         this.$message.success("头像设置成功!");
         // window.localStorage.setItem("userInfo", data);
@@ -187,7 +185,6 @@ export default {
         "post",
         "params"
       );
-      console.log(res);
       if (res.data.success) {
         this.$message.success("昵称修改成功!");
         // 更新用户数据
@@ -326,7 +323,7 @@ export default {
 }
 
 .group > div:hover {
-  background-color: #127b9c;
+  background-color: #1e9fd2;
   color: white;
 }
 

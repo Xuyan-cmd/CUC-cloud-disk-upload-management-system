@@ -30,6 +30,7 @@
 <script>
 import FunctionBar from "components/functionBar/FunctionBar.vue";
 import IconTypeList from "components/iconTypeList/IconTypeList.vue";
+
 export default {
   name: "Files",
   data() {
@@ -61,7 +62,6 @@ export default {
         "params",
         "json"
       );
-      console.log(res, 63);
       if (res.data.success) {
         if (this.$store.state.sortType == "size") {
           res.data.data.files.sort((a, b) => {
@@ -78,7 +78,6 @@ export default {
     // 获取文件目录树
     async getFolderList(dir) {
       if (!dir) {
-        console.log(81);
         let res = await this.$request("/educenter/dir/getUserDir", {
           id: this.$store.state.userInfo.id,
         });
@@ -86,9 +85,6 @@ export default {
           this.$router.replace("/login");
           return;
         }
-        // console.log(res);
-        // console.log(JSON.parse(res.data.data.dir.memDir));
-
         this.folderList = JSON.parse(res.data.data.dir.memDir);
         this.$store.commit(
           "updateFolderList",
@@ -106,11 +102,9 @@ export default {
     getVideoList(listData) {
       listData.forEach(async (item, index, arr) => {
         if (item.filetype === "video") {
-          // console.log("调用了这里");
           arr[index].url = await this.getVideoUrl(item.videoId);
         }
       });
-      // console.log(this.videoList);
     },
 
     // 根据传入videoId获取url
@@ -120,7 +114,6 @@ export default {
         "",
         "post"
       );
-      // console.log(res);
       return res.data.data.urlList[0].url;
     },
 
@@ -140,9 +133,7 @@ export default {
         path = this.$store.state.currentFolder.split("/search")[0];
       } else {
         path = this.$store.state.currentFolder;
-        console.log(131);
       }
-      console.log(path);
       this.$router.push({
         name: "files",
         params: {
@@ -158,7 +149,6 @@ export default {
     if (this.$store.state.currentFolder == "") {
       this.$store.commit("updateCurrentFolder", this.$route.params.path);
     }
-    console.log("createFiles");
     await this.getFolderList();
     this.$route.params.path.search("search"); //找不到返回-1
     if (this.$route.params.path.search("search") == -1) {
@@ -175,7 +165,6 @@ export default {
         "",
         "post"
       );
-      console.log(res);
       if (!res.data.success) return;
       if (this.$store.state.sortType == "size") {
         res.data.data.fileList.sort((a, b) => {

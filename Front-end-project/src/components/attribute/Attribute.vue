@@ -88,7 +88,6 @@ export default {
       let res = await this.$request(
         `/educenter/file/getFileInfo/${this.fileId}`
       );
-      console.log(res);
       this.fileInfo = res.data.data.file[0];
     },
 

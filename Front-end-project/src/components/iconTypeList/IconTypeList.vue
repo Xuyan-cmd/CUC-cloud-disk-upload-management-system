@@ -66,6 +66,8 @@
         :key="item.id"
         @click="selectCurrentItem(item)"
         @dblclick="openCurrentFile(item)"
+        @encryption="encryption(item)"
+        @sanlie="sanlie(item)"
         @contextmenu.prevent="showMenu($event, item)"
         :draggable="rightClickMenuType == 'files'"
         @dragstart="onDragItemStart($event, item)"
@@ -171,6 +173,8 @@
         :key="item.id"
         @click="selectCurrentItem(item)"
         @dblclick="openCurrentFile(item)"
+        @encryption="encryption(item)"
+        @sanlie="sanlie(item)"
         @contextmenu.prevent="showMenu($event, item)"
         :draggable="rightClickMenuType == 'files'"
         @dragstart="onDragItemStart($event, item)"
@@ -250,6 +254,8 @@
       @rename="rename"
       @collectCurrentFile="collectCurrentFile"
       @openCurrentFile="openCurrentFile(rightClickItem)"
+      @encryption="encryption(rightClickItem)"
+      @sanlie="sanlie(rightClickItem)"
       @downloadCurrentFile="downloadCurrentFile('current', rightClickItem)"
       @deleteCurrentFile="deleteCurrentFile('current', rightClickItem)"
       @shareCurrentFile="shareCurrentFile(rightClickItem)"
@@ -310,9 +316,9 @@
       class="searchTips"
       v-if="
         $route.params.path &&
-        $route.params.path.search('search') != -1 &&
-        searchFolder.length == 0 &&
-        this.listData.length == 0
+          $route.params.path.search('search') != -1 &&
+          searchFolder.length == 0 &&
+          this.listData.length == 0
       "
     >
       没有找到相应内容哦!
@@ -349,6 +355,7 @@ import RightClickMenu from "components/rightClickMenu/RightClickMenu.vue";
 import FolderDialog from "components/folderDialog/FolderDialog.vue";
 import GoTop from "components/goTop/GoTop.vue";
 import ShareDialog from "components/shareDialog/ShareDialog.vue";
+import { MessageBox } from "element-ui";
 
 export default {
   components: {
@@ -485,10 +492,8 @@ export default {
     getIsAllFileCollect() {
       // 说明存在文件为收藏
       let flag = this.selectFiles.find((item) => {
-        // console.log(item);
         return item.collection == 0;
       });
-      // console.log(flag);
       if (flag) {
         this.$store.commit("updateIsAllFileCollect", false);
       } else {
@@ -515,12 +520,9 @@ export default {
         this.isAttributeShow = false;
       }
       this.banScroll = true;
-      console.log(e, item);
-      // console.log(this.cardoffsetLeft);
       // 获取菜单的高度
       let menu = document.querySelector(".RightClickMenu");
       let menuHeight = menu.offsetTop;
-      console.log([menu], menuHeight);
       // 计算菜单dialog 的位置
       // files的菜单高度和collect不一样
       if (this.rightClickMenuType == "files") {
@@ -578,12 +580,10 @@ export default {
           document.querySelector(".tableRenameInput").focus();
         }
       });
-      //   console.log(this.rightClickIndex, 123456);
     },
 
     // 重命名完成后的回调  失去焦点或者回车
     async renameDone(item, index, type) {
-      console.log(item);
       // 判断输入内容是否为空
       if (this.renameInput.trim().length == 0) {
         if (!type) {
@@ -600,7 +600,6 @@ export default {
       // if (this.rightClickItem.id) {
       // 判断名字是否改变
       // 如果发生改变
-      // console.log(this.rightClickIndex);
       if (!type) {
         // 文件
         if (this.rightClickItem.name != this.renameInput.trim()) {
@@ -613,7 +612,6 @@ export default {
             },
             "post"
           );
-          console.log(res);
           if (res.data.success) {
             // 通知父组件重新请求服务器数据 重新渲染此组件
             // 这里直接修改数据，避免出现刷新 影响用户体验
@@ -626,7 +624,6 @@ export default {
         this.isRenameShow = false;
       } else {
         // 文件夹
-        console.log(this.renameInput);
         if (this.rightClickFolderItem.name != this.renameInput.trim()) {
           // 计算当前文件夹的路径
           let url = (
@@ -641,15 +638,14 @@ export default {
             ]).join("").length
           );
           let res = await this.$request(
-            `/educenter/dir/updateDirStruct/${this.$store.state.userInfo.id}/${
-              this.renameInput.trim() + "/"
-            }/${this.rightClickFolderItem.id}`,
+            `/educenter/dir/updateDirStruct/${
+              this.$store.state.userInfo.id
+            }/${this.renameInput.trim() + "/"}/${this.rightClickFolderItem.id}`,
             url,
             "post",
             "params",
             "json"
           );
-          console.log(res);
           if (res.data.success) {
             this.rightClickFolderItem.name = this.renameInput.trim() + "/";
           } else {
@@ -686,7 +682,6 @@ export default {
               "",
               "post"
             );
-            console.log(res);
             //   重新加载组件
             if (res.data.success) {
               this.$emit("getFolderList");
@@ -725,9 +720,91 @@ export default {
         this.$message.warning("该文件暂时不能直接打开哦,可以下载后在本地打开!");
       }
     },
-
+    async sanlie(data) {
+      let res = await this.$request(
+        "/educenter/file/findFile/xiazai",
+        data,
+        "post",
+        "params"
+      );
+      console.log(11111, res);
+      let slz = res.data.data.data;
+      MessageBox.alert(
+        "该文件的散列值为：" + slz + " , 经检测文件没有被篡改",
+        "文件篡改检测",
+        {
+          confirmButtonText: "关闭",
+          callback: (action) => {
+           
+          },
+        }
+      );
+    },
+    // 加密函数
+    async encryption(item) {
+      // item.encryption = "1";
+      let data = item;
+      // let vacaacca;
+      MessageBox.prompt("请输入密码", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      })
+        .then(({ value }) => {
+          data.encryption = "2";
+          data.pass = value;
+          this.jm(data);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入",
+          });
+        });
+    },
+    async jm(data) {
+      if (data.pass) {
+        await this.$request(
+          "/educenter/file/encryption",
+          data,
+          "post",
+          "params"
+        );
+      }
+    },
     // 删除文件
     async deleteCurrentFile(type, item) {
+      let passcheck = false;
+      if (item.encryption === "2") {
+        MessageBox.prompt("请输入密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+        }).then(({ value }) => {
+          item.pass = value;
+          this.deletejiemi(item, type);
+        });
+      } else {
+        this.shanchu(type, item);
+      }
+    },
+
+    // 解密
+    async deletejiemi(data, type) {
+      let r = await this.$request(
+        "/educenter/file/decrypt",
+        data,
+        "post",
+        "params"
+      );
+      let state;
+      console.log(123, r);
+      state = r.data.success;
+      if (state) {
+        this.shanchu(type, data);
+      } else {
+        this.$message.error("文件密码输入错误,不能删除文件");
+      }
+    },
+    async shanchu(type, item) {
       let res;
       let arr = [];
       if (type == "current") {
@@ -742,7 +819,6 @@ export default {
         "",
         "delete"
       );
-      // console.log(res);
       // 删除成功后重新获取列表
       // 减少刷新次数，提升用户体验
       // this.$emit("getListData");
@@ -782,7 +858,6 @@ export default {
         this.$message.error("删除失败,请稍后重试!");
       }
     },
-
     // js递归遍历树形json数据，根据关键字查找节点
     //@leafId  查找的id，
     //@nodes   原始Json数据
@@ -813,7 +888,7 @@ export default {
     // 打开当前双击的文件夹
     // 点击的是folderList中第 index个子目录
     openCurrentFolder(item) {
-      console.log(this.folderList);
+      console.log("打开文件", item);
       let currentFolder = (
         "/" + this.findPathByLeafId(item.name, [this.folderList]).join("")
       ).slice(
@@ -824,7 +899,6 @@ export default {
       //   this.$route.params.path +
       //   "/" +
       //   item.name.substr(0, item.name.length - 1);
-      // console.log(currentFolder);
       // // 在vuex中更新当前目录
       // this.$store.commit("updateCurrentFolder", currentFolder);
       this.$router.push({ name: "files", params: { path: currentFolder } });
@@ -833,18 +907,14 @@ export default {
     // 判断当前所在的文件夹位置
     getCurrentLocation() {
       if (this.$route.params.path.search("search") != -1) return;
-      console.log(612);
       let currentFolder = this.$route.params.path;
       currentFolder = currentFolder.slice(1, currentFolder.length);
       let arr = currentFolder.split("/");
-      console.log(arr);
       // 如果是/search就不计算当前位置了
       // if (arr[arr.length - 1] == "search") {
       //   return;
       // }
-      // console.log(arr);
       this.currentChildrenFolder = this.folderList.childrenList;
-      console.log(this.folderList);
       if (arr.length > 1) {
         // 说明不在根目录
         for (var i = 1; i < arr.length; i++) {
@@ -852,20 +922,32 @@ export default {
             (item) => item.name.substr(0, item.name.length - 1) == arr[i]
           );
           this.currentFolderId = this.currentChildrenFolder[index].id;
-          this.currentChildrenFolder =
-            this.currentChildrenFolder[index].childrenList;
-          // console.log(482, this.currentChildrenFolder[index]);
-          // console.log(this.currentChildrenFolder);
+          this.currentChildrenFolder = this.currentChildrenFolder[
+            index
+          ].childrenList;
         }
-        // console.log("currentFolderId", this.currentFolderId);
       } else {
-        // console.log(348, this.currentChildrenFolder);
         this.currentFolderId = 1;
       }
     },
-
-    // 点击下载文件的回调
-    downloadCurrentFile(type, item) {
+    // 解密
+    async jiemi(data, type) {
+      let r = await this.$request(
+        "/educenter/file/decrypt",
+        data,
+        "post",
+        "params"
+      );
+      let state;
+      console.log(123, r);
+      state = r.data.success;
+      if (state) {
+        this.xiazai(type, data);
+      } else {
+        this.$message.error("文件密码输入错误,不能下载文件");
+      }
+    },
+    async xiazai(type, item) {
       let url;
       // 循环的数组，里面的item是索引
       let arr = [];
@@ -878,18 +960,17 @@ export default {
         // 循环执行的速度太快，watch来不及监听 这里通过定时器放到异步执行
         setTimeout(async () => {
           if (i.filetype == "video" || i.filetype == "audio") {
-            console.log(i);
             // 请求url
             let res = await this.$request(
               "/eduoss/fileoss/getPlayAuth?isList=" + i.videoId,
               "",
               "post"
             );
-            console.log(res);
-            url = res.data.data.urlList[0].url;
+            url = "/downloadvideo/" + i.url.split("com/")[1];
           } else {
             url = "/downloadfile/" + i.url.split("com/")[1];
           }
+          console.log("url", url);
           this.$store.commit("updateCurrentDownloadFileInfo", {
             name: i.name + "." + i.type,
             url,
@@ -898,10 +979,25 @@ export default {
       });
     },
 
+    // 点击下载文件的回调
+    downloadCurrentFile(type, item) {
+      let passcheck = false;
+      if (item.encryption === "2") {
+        MessageBox.prompt("请输入密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+        }).then(({ value }) => {
+          item.pass = value;
+          this.jiemi(item, type);
+        });
+      } else {
+        this.xiazai(type, item);
+      }
+    },
+
     // 收藏文件
     async collectCurrentFile(collect, type, playerItem) {
       let ids = [];
-      console.log(collect);
       if (!type || type == "current") {
         // ids = this.$store.state.rightClickItem.id;
         ids.push(this.rightClickItem.id);
@@ -930,7 +1026,6 @@ export default {
           "",
           "post"
         );
-        console.log(res);
 
         if (res.data.success) {
           this.$message.success("收藏成功!");
@@ -959,7 +1054,6 @@ export default {
           "",
           "post"
         );
-        console.log(res);
 
         if (res.data.success) {
           this.$message.success("取消收藏成功!");
@@ -1005,7 +1099,6 @@ export default {
         "params",
         "json"
       );
-      console.log(res);
       if (res.data.success) {
         this.$message.success("移动成功!");
         // 避免直接获取数据，以避免dom刷新 影响用户体验
@@ -1042,7 +1135,6 @@ export default {
 
     // 分享当前文件
     shareCurrentFile(item) {
-      // console.log(item);
       this.shareItem = item;
       this.isShareDialogShow = true;
     },
@@ -1059,7 +1151,6 @@ export default {
 
     // 删除当前文件夹
     async deleteCurrentFolder(item) {
-      // console.log(item);
       let res = await this.$request(
         `/educenter/dir/deleteDirStruct/${this.$store.state.userInfo.id}/${item.id}`,
         this.$store.state.currentFolder +
@@ -1069,7 +1160,6 @@ export default {
         "params",
         "json"
       );
-      // console.log(res);
       if (res.data.success) {
         this.$emit("getFolderList");
       }
@@ -1084,7 +1174,6 @@ export default {
     // item 拖动事件
     // 文件对象
     onDragItemStart(e, item) {
-      console.log(e);
       this.dragItemList = [];
       // 判断item是否被选中 选中则拖动所有选中的选项，否则只拖动当前item
       if (this.selectFiles.find((i) => i.id == item.id)) {
@@ -1093,8 +1182,6 @@ export default {
       } else {
         this.dragItemList[0] = item;
       }
-      // console.log(e.path[0]);
-      // 将原来的幽灵效果换成透明图
       let img = document.createElement("img");
       e.dataTransfer.setDragImage(img, 0, 0);
       // 确认自定义拖动框的位置
@@ -1116,7 +1203,6 @@ export default {
             return true;
           }
           if (i.id != item.id) {
-            // console.log(i.url);
             if (i.filetype != "video") {
               let img = document.createElement("img");
               // 图片
@@ -1155,7 +1241,6 @@ export default {
 
     // 为了代码的简洁，统一使用document.ondragover事件
     // onDragItem(e) {
-    // console.log(e);
     // if (e.clientX == 0 && e.clientY == 0) {
     //   this.showDragImgContainer = false;
     // } else {
@@ -1180,7 +1265,6 @@ export default {
 
     // 文件夹对象
     dropItem(item) {
-      console.log(item);
       // 获得文件夹的完整路径
       let currentFolder = (
         "/" + this.findPathByLeafId(item.name, [this.folderList]).join("")
@@ -1188,7 +1272,6 @@ export default {
         0,
         this.findPathByLeafId(item.name, [this.folderList]).join("").length
       );
-      // console.log(currentFolder);
       this.confirmMove(currentFolder, "drag", this.dragItemList);
       this.dragItemList = [];
     },
@@ -1236,7 +1319,6 @@ export default {
     },
     folderList(current) {
       this.getCurrentLocation();
-      console.log("885---------------------");
     },
 
     // 监听选中文件的变化
@@ -1272,13 +1354,11 @@ export default {
   mounted() {
     // 获取组件的offset
     let Card = document.querySelector(".iconTypeListContainer");
-    // console.log(Card);
     this.cardoffsetTop = Card.offsetTop;
     this.cardoffsetLeft = Card.offsetLeft;
 
     // 监听页面窗口大小变化
     window.addEventListener("resize", (e) => {
-      // console.log(e);
       this.pageWidth = document.body.clientWidth;
       this.pageHeight = document.body.clientHeight;
     });
