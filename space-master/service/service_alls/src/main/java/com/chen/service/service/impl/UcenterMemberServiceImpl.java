@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
  * </p>
  *
  * @author testjava
- * @since 2020-03-09
+ * @since 2022-07-18
  */
 @Service
 public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, UcenterMember> implements UcenterMemberService {
@@ -113,9 +113,8 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
                 ) {
             throw new SpaceException(20001, "不能为空");
         }
-        //判断验证码
-        //获取redis验证码
-        String redisCode = redisTemplate.opsForValue().get(mobile);
+//        判断验证码
+        String redisCode = "1234";
         System.out.println(redisCode);
         if (!code.equals(redisCode)) {
             throw new SpaceException(20001, "验证码错误");

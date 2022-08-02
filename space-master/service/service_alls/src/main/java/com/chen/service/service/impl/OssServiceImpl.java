@@ -3,17 +3,9 @@ package com.chen.service.service.impl;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.vod.upload.impl.UploadVideoImpl;
 import com.aliyun.vod.upload.req.UploadStreamRequest;
 import com.aliyun.vod.upload.resp.UploadStreamResponse;
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.vod.model.v20170321.GetPlayInfoRequest;
-import com.aliyuncs.vod.model.v20170321.GetPlayInfoResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.chen.service.entity.File;
 import com.chen.service.service.FileService;
@@ -23,13 +15,11 @@ import com.chen.service.utils.ConstanPropertiesUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 public class OssServiceImpl implements OssService {
@@ -110,8 +100,8 @@ public class OssServiceImpl implements OssService {
      * 文件删除
      * @param: objectName
      * @return: java.lang.String
-     * @create: 2020/10/31 16:50
-     * @author: csp1999
+     * @create: 2022/7/15 16:50
+     * @author: rock
      */
     public String delete(String id) {
         String endpoint = ConstanPropertiesUtils.END_POIND;

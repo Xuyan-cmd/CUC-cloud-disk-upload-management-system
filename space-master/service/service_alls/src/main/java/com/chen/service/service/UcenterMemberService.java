@@ -10,7 +10,7 @@ import com.chen.service.entity.vo.RegisterVo;
  * </p>
  *
  * @author testjava
- * @since 2020-03-09
+ * @since 2022-07-24
  */
 public interface UcenterMemberService extends IService<UcenterMember> {
 

@@ -17,6 +17,7 @@ import com.chen.service.service.FileService;
 import com.chen.service.service.OssService;
 import com.chen.service.service.UcenterMemberService;
 import com.chen.service.utils.ConstanPropertiesUtils;
+import com.chen.service.utils.DES;
 import com.chen.service.utils.InitVodCilent;
 import com.chen.service.utils.R;
 import com.google.gson.Gson;
@@ -24,12 +25,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.util.*;
 
 import static com.chen.service.utils.InitVodCilent.initVodClient;
@@ -47,7 +51,7 @@ public class OssController {
 
     @Autowired
     private UcenterMemberService memberService;
-
+    private final String password = "9588028820109132570743325311898426347857298773549468758875018579537757772163084478873699447306034466200616411960574122434059469100235892702736860872901247654321";
     //上传头像
     @ApiOperation(value = "根据用户id上传头像")
     @PostMapping("uploadFileAvatar")
@@ -68,7 +72,7 @@ public class OssController {
         long neicun = one.getNeicun();
         long size = file.getSize();
         long result=neicun+ size;
-        if (result<1073741824){
+        if (size<(10*1024*1024)){
             UcenterMember member=new UcenterMember();
             member.setNeicun(result);
             member.setId(memid);
@@ -95,10 +99,12 @@ public class OssController {
                 file1.setName(title);
                 file1.setType(type);
                 file1.setFDir(catalogue);
-                String videoId = ossService.uploadfile(file);
-                file1.setVideoId(videoId);
+                File fileali = ossService.upload(file, catalogue);
+                file1.setVideoId(UUID.randomUUID().toString());
+                file1.setUrl(fileali.getUrl());
                 return R.ok().data("file", file1);
             } else {
+//            todo : 上传文件至OSS 需要修改回显
                 File file1 = ossService.upload(file, catalogue);
 
                 if (file1.equals("")) {
@@ -134,10 +140,10 @@ public class OssController {
             if (file.getFiletype().equals("video") || file.getFiletype().equals("audio")) {
                 System.out.println(file.getVideoId());
                 String videoId = ossService.deleteVideo(idList[i]);
-                String video = video(videoId);
-                if (video.equals("success")) {
+//                String video = video(videoId);
+//                if (video.equals("success")) {
                     flag = true;
-                }
+//                }
             } else {
                 //System.out.println("晚间222222");
                 String status = ossService.delete(idList[i]);
@@ -181,46 +187,52 @@ public class OssController {
         System.out.println(isList);
 
         ArrayList urlList = new ArrayList();
-        File file = new File();
-        // 创建SubmitMediaInfoJob实例并初始化
-        DefaultProfile profile = DefaultProfile.getProfile(
-                "cn-Shanghai",                // // 点播服务所在的地域ID，中国大陆地域请填cn-shanghai
-                "LTAI5tNE97urNKXTDZaXCL48",        // 您的AccessKey ID
-                "qfkZet3UlBHc3l1VnUFXVIJ9PmjXPn");    // 您的AccessKey Secret
-        IAcsClient client = new DefaultAcsClient(profile);
-        GetPlayInfoRequest request = new GetPlayInfoRequest();
+//        File file = new File();
+//         创建SubmitMediaInfoJob实例并初始化
+//        DefaultProfile profile = DefaultProfile.getProfile(
+//                "cn-Shanghai",                // // 点播服务所在的地域ID，中国大陆地域请填cn-shanghai
+//                "LTAI5tNE97urNKXTDZaXCL48",        // 您的AccessKey ID
+//                "qfkZet3UlBHc3l1VnUFXVIJ9PmjXPn");    // 您的AccessKey Secret
+//        IAcsClient client = new DefaultAcsClient(profile);
+//        GetPlayInfoRequest request = new GetPlayInfoRequest();
         // 视频ID。
         for (int i = 0; i < isList.size(); i++) {
             Map<String, Object> map = new HashMap<String, Object>();
             // System.out.println(isList.get(i));
-            file.setVideoId(isList.get(i));
-            map.put("videoId", isList.get(i));
-            request.setVideoId(isList.get(i));
+//            file.setVideoId(isList.get(i));
+//            map.put("videoId", isList.get(i));
+//            request.setVideoId(isList.get(i));
             // request.setVideoId(id);
+            File fileDb = fileService.getAllFileVedioId(isList.get(i));
             try {
-                GetPlayInfoResponse response = client.getAcsResponse(request);
+                fileDb.setUrl(new String(DES.decrypt(Base64.getDecoder().decode(fileDb.getUrl()), password)));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+//            try {
+//                GetPlayInfoResponse response = client.getAcsResponse(request);
                 // System.out.println(response.getPlayInfoList().get(3));
 //                response.getPlayInfoList().
                 //response.getVideoBase().getCoverURL();
                 //System.out.println(new Gson().toJson(response));
-                for (GetPlayInfoResponse.PlayInfo playInfo : response.getPlayInfoList()) {
+//                for (GetPlayInfoResponse.PlayInfo playInfo : response.getPlayInfoList()) {
                     // 播放地址
-                    System.out.println("PlayInfo.PlayURL = " + playInfo.getPlayURL());
-                    file.setUrl(playInfo.getPlayURL());
-                    map.put("url", playInfo.getPlayURL());
+//                    System.out.println("PlayInfo.PlayURL = " + playInfo.getPlayURL());
+//                    file.setUrl(playInfo.getPlayURL());
+                    map.put("url", fileDb.getUrl());
                     urlList.add(map);
                     System.out.println(urlList);
                     //System.out.println(map);
                     //urlList.add(playInfo.getPlayURL());
-                    request.setVideoId(null);
-                }
-            } catch (ServerException e) {
-                e.printStackTrace();
-            } catch (ClientException e) {
-                System.out.println("ErrCode:" + e.getErrCode());
-                System.out.println("ErrMsg:" + e.getErrMsg());
-                System.out.println("RequestId:" + e.getRequestId());
-            }
+//                    request.setVideoId(null);
+//                }
+//            } catch (ServerException e) {
+//                e.printStackTrace();
+//            } catch (ClientException e) {
+//                System.out.println("ErrCode:" + e.getErrCode());
+//                System.out.println("ErrMsg:" + e.getErrMsg());
+//                System.out.println("RequestId:" + e.getRequestId());
+//            }
             //urlList.add(map);
             //map.clear();
             //list.add(file);
@@ -228,6 +240,4 @@ public class OssController {
         }
         return R.ok().data("urlList", urlList);
     }
-
-
 }

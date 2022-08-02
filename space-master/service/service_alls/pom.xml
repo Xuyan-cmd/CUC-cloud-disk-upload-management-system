@@ -59,6 +59,7 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
+
         </dependency>
 
         <!--httpclient-->
@@ -95,6 +96,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-sdk-vod-upload</artifactId>
+            <version>1.4.14</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

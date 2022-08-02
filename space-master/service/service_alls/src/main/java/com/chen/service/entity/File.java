@@ -66,4 +66,11 @@ public class File implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
+
+    @ApiModelProperty(value = "是否加密 1 未加密 2 加密")
+    private String encryption;
+
+    @ApiModelProperty(value = "密码")
+    private String pass;
+
 }

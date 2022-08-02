@@ -11,11 +11,13 @@ import java.util.List;
  * </p>
  *
  * @author testjava
- * @since 2021-06-06
+ * @since 2022-07-19
  */
 public interface FileService extends IService<File> {
 
     List<File> getAllFileInfo(String memId);
+
+    File getAllFileVedioId(String vedioId);
 
     List<File> getFileInfo(String id);
 

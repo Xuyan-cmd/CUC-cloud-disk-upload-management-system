@@ -18,7 +18,7 @@ import java.util.List;
  * </p>
  *
  * @author testjava
- * @since 2021-06-06
+ * @since 2022-07-19
  */
 @Service
 public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements FileService {
@@ -30,6 +30,16 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         List<File> fileList = baseMapper.selectList(wrapper);
         //System.out.println(files);
         return fileList;
+    }
+
+    @Override
+    public File getAllFileVedioId(String vedioId) {
+        QueryWrapper<File> wrapper=new QueryWrapper<>();
+        wrapper.eq("video_id",vedioId);
+        //File files = baseMapper.selectById(wrapper);
+        List<File> fileList = baseMapper.selectList(wrapper);
+        //System.out.println(files);
+        return fileList.get(0);
     }
 
     @Override
@@ -102,6 +112,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         //System.out.println(fileList);
         return fileList;
     }
+
 
 
 }

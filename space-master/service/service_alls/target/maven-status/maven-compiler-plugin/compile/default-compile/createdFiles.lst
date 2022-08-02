@@ -35,6 +35,7 @@ com\chen\service\entity\vo\RegisterVo.class
 com\chen\service\service\MsmService.class
 com\chen\service\utils\JwtUtils.class
 com\chen\service\service\impl\FileServiceImpl.class
+com\chen\service\utils\DES.class
 com\chen\service\controller\UserDirController$2.class
 com\chen\service\utils\RandomUtil.class
 com\chen\service\controller\MsmController.class
