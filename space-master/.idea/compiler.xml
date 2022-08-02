@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="service_alls" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="service" target="1.8" />
+      <module name="service_alls" target="1.8" />
+      <module name="service_bases" target="1.8" />
+      <module name="service_util" target="1.8" />
+      <module name="spaces" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="service" options="-parameters" />
+      <module name="service_alls" options="-parameters" />
+      <module name="service_bases" options="-parameters" />
+      <module name="service_util" options="-parameters" />
+      <module name="spaces" options="-parameters" />
+    </option>
+  </component>
+</project>
