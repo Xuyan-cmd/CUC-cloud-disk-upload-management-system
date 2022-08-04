@@ -2,7 +2,7 @@
 
 **一个基于Vue和springboot+mybatisplus实现的文件云盘管理系统**
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?size=25&duration=1486&center=%E9%94%99%E8%AF%AF%E7%9A%84&vCenter=%E9%94%99%E8%AF%AF%E7%9A%84&multiline=true&height=60&lines=%E4%B8%AD%E4%BC%A0%E6%94%BE%E5%BF%83%E4%BC%A0;CUC-cloud-disk-upload-management-system)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?size=30&duration=1497&center=%E9%94%99%E8%AF%AF%E7%9A%84&vCenter=%E9%94%99%E8%AF%AF%E7%9A%84&multiline=true&width=620&height=70&lines=%E4%B8%AD%E4%BC%A0%E6%94%BE%E5%BF%83%E4%BC%A0;CUC-cloud-disk-upload-management-system)](https://git.io/typing-svg)
 
 ### 📔任务清单
 
@@ -41,6 +41,10 @@
   - 提供静态文件的散列值下载，供下载文件完成后本地校验文件完整性 【 *散列算法* 】
 
 **项目开发日志请查看：**[项目进度](https://www.xuyanblog.cn/%E5%AF%86%E7%A0%81%E5%AD%A6%E5%B0%8F%E5%AD%A6%E6%9C%9F%E5%AE%9E%E8%B7%B5)
+
+**前端开发日志：**[前端工作日志](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/front_end/README.md)
+
+**后端开发日志：**[后端工作日志](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/rear_end/README.md)
 
 ### 💻功能概览
 
