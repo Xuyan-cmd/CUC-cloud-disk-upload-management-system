@@ -24,6 +24,285 @@
 
 ### 后端开发
 
+- **测试开发**
+
+  该事例为正式开发前的测试开发，因为对于前端知识了解的并不多，所以就简易搭建了前端页面，主要是运用了两个`form`表单用来提交数据。主要开发在后端的逻辑实现，实现了登录和注册的功能，这个事例的开发让我了解了后端开发的基本流程以及实现方法，但是该事例也存在许多问题，没有运用密码学和网络安全知识，所有数据也都是明文存储，只能说仅仅实现了网盘的登录和注册功能，不过这也为我们后面的正式开发打下了坚实的基础。
+
+  开始构建项目，建立项目文件，并导入相关依赖。
+
+  ![](https://s2.loli.net/2022/07/16/qfcOuU6aQP79TKx.png)
+
+  为了方便开发简单搭建前端页面。
+
+  建立项目所需库表，用户信息表`t_user`，和文件信息表`t_files`。
+
+  ![](https://s2.loli.net/2022/07/16/wn4PbkuARe6xDC5.png )
+
+  ![](https://s2.loli.net/2022/07/16/qNbrWDSzIkYLTQm.png )
+
+  ```mysql
+  CREATE TABLE `t_files` (
+    `id` int NOT NULL,
+    `oldFileName` varchar(200) DEFAULT NULL,
+    `newFileName` varchar(300) DEFAULT NULL,
+    `ext` varchar(20) DEFAULT NULL,
+    `path` varchar(300) DEFAULT NULL,
+    `size` varchar(200) DEFAULT NULL,
+    `type` varchar(120) DEFAULT NULL,
+    `isimg` varchar(8) DEFAULT NULL,
+    `downcounts` int DEFAULT NULL,
+    `uploadTime` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  
+  CREATE TABLE `t_user` (
+    `id` int NOT NULL,
+    `username` varchar(80) DEFAULT NULL,
+    `password` varchar(80) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  ```
+
+  搭建项目所需环境，配置`application.properties`文件
+
+  ```properties
+  spring.application.name=files
+  server.port=8989
+  server.servlet.context-path=/files
+  
+  spring.thymeleaf.cache=false
+  spring.thymeleaf.suffix=.html
+  spring.thymeleaf.encoding=UTF-8
+  spring.thymeleaf.prefix=classpath:/templates/
+  spring.web.resources.static-locations=classpath:/templates/,classpath:/static/
+  
+  spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+  spring.datasource.url=jdbc:mysql://localhost:3306/cloud?characterEncoding=UTF-8
+  spring.datasource.username=root
+  spring.datasource.password=root
+  
+  mybatis.mapper-locations=classpath:/com/cuc/mapper/*.xml
+  mybatis.type-aliases-package=com.cuc.cloud.entity
+  ```
+
+  首先进行持久层开发，先编写实体类，`User`实体类。为`com.cuc.cloud.entity`下新建的`User`实体类。
+
+  ```java
+  package com.cuc.cloud.entity;
+  
+  import lombok.AllArgsConstructor;
+  import lombok.Data;
+  import lombok.NoArgsConstructor;
+  import lombok.ToString;
+  import lombok.experimental.Accessors;
+  
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @ToString
+  @Accessors(chain = true)
+  public class User {
+      private Integer id;
+      private String username;
+      private String password;
+  }
+  ```
+
+  创建`UserDao`接口，定义登录和注册的类型
+
+  ```java
+  package com.cuc.cloud.dao;
+  
+  import com.cuc.cloud.entity.User;
+  
+  public interface UserDao {
+      User login(User user);
+  
+      void register(User user);
+  }
+  ```
+
+  创建控制器`Controller`，定义登录和注册的实现方法
+
+  `UserController`
+
+  ```java
+  package com.cuc.cloud.controller;
+  
+  
+  import com.cuc.cloud.entity.User;
+  import com.cuc.cloud.service.UserService;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Controller;
+  import org.springframework.ui.Model;
+  import org.springframework.web.bind.annotation.GetMapping;
+  import org.springframework.web.bind.annotation.PostMapping;
+  import org.springframework.web.bind.annotation.RequestMapping;
+  
+  import javax.servlet.http.HttpSession;
+  
+  @Controller
+  @RequestMapping("user")
+  public class UserController {
+  
+      @Autowired
+      private UserService userService;
+  
+      /*登录方法*/
+      @PostMapping("login")
+      public String login(User user, HttpSession session){
+          User userDB = userService.login(user);
+          if (userDB!=null){ //userDB为查询结果，如果不等于空说明已经查询到，允许登录。
+              session.setAttribute("user",userDB);
+              return "redirect:/file/showAll";
+          }else{
+              return "redirect:/index"; //防止表单重复提交，采用重定向的方式返回登录页面。
+          }
+  
+      }
+      
+       /*注册方法*/
+      @PostMapping("register")
+      public String register(User user, Model model){
+          try {
+              System.out.println(user);
+              userService.register(user);
+              model.addAttribute("msg","注册成功，请登录");
+              return "redirect:/register";
+          } catch (Exception e){
+              model.addAttribute("msg","注册失败");
+              return "redirect:/register";
+          }
+      }
+  
+      @GetMapping("toLogin")
+      public String toLogin(){
+          return "redirect:/index";
+      }
+  
+      @GetMapping("toRegister")
+      public String toRegister() {
+          return "redirect:/register";
+      }
+  }
+  
+  ```
+
+  `RegisterController`
+
+  ```java
+  package com.cuc.cloud.controller;
+  
+  import org.springframework.stereotype.Controller;
+  import org.springframework.web.bind.annotation.GetMapping;
+  
+  @Controller
+  public class RegisterController {
+  
+      @GetMapping("register")
+      public String toRegister(){
+          return "register";
+      }
+  }
+  ```
+
+  `IndexController`
+
+  ```java
+  package com.cuc.cloud.controller;
+  
+  
+  import org.springframework.stereotype.Controller;
+  import org.springframework.web.bind.annotation.GetMapping;
+  
+  @Controller
+  public class IndexController {
+  
+      @GetMapping("index")
+      public String toLogin(){
+          return "login";
+      }
+  }
+  ```
+
+  创建`UserService`接口
+
+  ```java
+  package com.cuc.cloud.service;
+  
+  import com.cuc.cloud.entity.User;
+  
+  public interface UserService {
+      User login(User user);
+  
+      void register(User user);
+  }
+  ```
+
+  创建`UserServicelmpl`实体类
+
+  ```java
+  package com.cuc.cloud.service;
+  
+  import com.cuc.cloud.dao.UserDao;
+  import com.cuc.cloud.entity.User;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Service;
+  import org.springframework.transaction.annotation.Propagation;
+  import org.springframework.transaction.annotation.Transactional;
+  
+  import javax.annotation.Resource;
+  
+  
+  @Service
+  @Transactional
+  public class UserServiceImpl implements UserService{
+  
+      @Autowired
+      @Resource
+      private UserDao userDao;
+  
+      @Override
+      @Transactional(propagation = Propagation.SUPPORTS)
+      public User login(User user) {
+          System.out.println(user);
+          return userDao.login(user);
+      }
+  
+      @Override
+      public void register(User user){
+          System.out.println(user);
+          userDao.register(user);
+      }
+  }
+  ```
+
+  建立`UserDaoMapper.xml`文件，定义数据库操作
+
+  ```java
+  <?xml version="1.0" encoding="utf-8" ?>
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  <mapper namespace="com.cuc.cloud.dao.UserDao">
+  
+      
+      <!--login-->
+      <select id="login" parameterType="User" resultType="User">
+          select id,username,password
+          from t_user
+          where username = #{username}
+          and password = #{password}
+      </select>
+  
+      <!--register-->
+      <insert id="register" parameterType="User">
+      insert into t_user(username, password)
+      values(#{username}, #{password});
+      </insert>
+      
+  </mapper>
+  ```
+
 - **文件上传、下载、删除接口函数编写总结**
 
   - 文件的上传下载等借口，使用最多的两个类File以及MultipartFile类
@@ -156,7 +435,7 @@
 
       传参接口格式，
 
-      ```java
+      ```json
       {
           "avatar":"string"
           "code":"string"
@@ -470,4 +749,4 @@
 
 ## 总结反思
 
-在这次暑假实践里真的学习了很多东西，也挑战了一下自己的知识盲区，对于后端框架自己之前真的是一无所知，通过这个暑假的不断学习，最终也慢慢掌握了一些开发方法以及流程，真的要感谢我的组员们，在他们的帮助下解决了很多我所遇到的问题。最后真的感谢大佬们带我，真心感谢大家！
+在这次暑假实践里真的学习了很多东西，也挑战了一下自己的知识盲区，对于后端框架自己之前真的是一无所知，通过这个暑假的不断学习，最终也慢慢掌握了一些开发方法以及流程，在这过程中也遇到了不少的问题，真的要感谢我的组员们，在他们的帮助下解决了很多我所遇到的问题。最后真的感谢大佬们带我，真心感谢大家！
