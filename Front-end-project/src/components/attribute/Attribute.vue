@@ -96,6 +96,45 @@ export default {
       this.fileInfo = {};
       this.$emit("closeAtrribute");
     },
+
+    // 拖动属性框的回调
+    moveDialog(e) {
+      // console.log(e);
+      // console.log([e.target]);
+      let dialog;
+      if (e.target.className != "Attribute") {
+        dialog = e.target.parentNode;
+      } else {
+        return;
+      }
+      //算出鼠标相对元素的位置
+      let disX = e.clientX - dialog.offsetLeft;
+      let disY = e.clientY - dialog.offsetTop;
+      let pageWidth = document.body.clientWidth;
+      let pageHeight = document.body.clientHeight;
+      // console.log(pageWidth, pageHeight);
+      document.onmousemove = (e) => {
+        // console.log(e);
+        //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+        let left = e.clientX - disX;
+        let top = e.clientY - disY;
+
+        top = top < 100 ? 100 : top;
+        top = top > pageHeight - 225 ? pageHeight - 225 : top;
+        left = left < 245 ? 245 : left;
+        left = left > pageWidth - 325 ? pageWidth - 325 : left;
+        // console.log(top, left);
+
+        //移动当前元素
+        dialog.style.left = left + "px";
+        dialog.style.top = top + "px";
+      };
+      // 鼠标松开时清空事件
+      document.onmouseup = () => {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    },
   },
   created() {},
   watch: {
