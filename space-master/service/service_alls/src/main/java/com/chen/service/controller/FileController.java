@@ -146,9 +146,10 @@ public class FileController {
     public R encryption(@RequestBody File file) {
         try {
             if (file.getUrl().indexOf("https") != -1){
-                file.setUrl(new String(DES.encrypt(Base64.getDecoder().decode(file.getUrl()), password)));
+                file.setUrl(Base64.getEncoder().encodeToString(DES.encrypt(file.getUrl().getBytes(), password)));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         service.updateById(file);

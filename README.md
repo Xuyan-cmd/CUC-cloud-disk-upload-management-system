@@ -929,7 +929,13 @@ public File upload(MultipartFile file,String catalogue) {
 }
 ```
 
+### 2022.8.12修复了由于全局设定中同时定义了两个实体类，导致无法在数据库中找到对应的字段
 
+![](https://s6.jpg.cm/2022/08/12/PlLC3T.jpg)
+
+![](https://s6.jpg.cm/2022/08/12/PlLhRE.jpg)
+
+![](https://s6.jpg.cm/2022/08/12/PlL3Y6.jpg)
 
 
 
