@@ -389,7 +389,20 @@ spring.servlet.multipart.max-request-size=50MB
 
 ## 总结反思
 
-我们这次的实验运用了**SpringBoot框架**，在学习运用的过程中，我也发现了该技术较于其他框架的优点：首先就是它可以自动配置SpringMVC等其它开源框架，同时简化了maven依赖与配置；然后就是它可以以jar包的形式独立运行，对于后端的测试较为方便。
+我们这次的实验运用了**SpringBoot框架**，在学习运用的过程中，我对于SpringBoot有了基本的认识，首先它的基本流程可分为以下几个步骤：
+1.new一个SpringApplication，构造方法里初始化一些属性
+2.在实例化之后执行run方法主体，run执行流程是基于观察者模式的，整个SpringBoot的启动流程就是各种事件的发布，同时获取并启用监听器ApplicationListener，并发布应用启动事件SpringApplicationRunListener
+3.准备环境变量，包含系统属性和用户配置的属性以及maven变量等，执行的代码块在 prepareEnvironment 方法内
+4.创建应用程序的上下文createApplicationContext()
+5.去spring.factories文件加载异常报告器SpringBootExceptionReporter
+6.准备上下文环境prepareContext(执行实现了ApplicationContextInitializer 接口的类)
+7.刷新上下文refreshContext，主要是自动装配和启动 tomcat
+8.刷新上下文后置处理afterRefresh，空方法
+9.发布上下文准备就绪事件
+10.执行自定义的run方法。ApplicationRunner和CommandLineRunner
+
+
+我也发现了该技术较于其他框架的优点：首先就是它可以自动配置SpringMVC等其它开源框架，同时简化了maven依赖与配置；然后就是它可以以jar包的形式独立运行，对于后端的测试较为方便。
 
 在整个开发流程中，我们还存在部分技术细节和问题没有解决，比如说短信的验证和数字签名的验证，所以我们需要进一步去学习和实践，毕竟学无止境，不能只满足于已经实现的功能。
 
