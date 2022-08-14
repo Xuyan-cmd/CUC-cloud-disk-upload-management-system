@@ -135,6 +135,8 @@
 
 后端开发主要使用了SpringBoot框架，这是一个从无到有的过程，组长分享了一些学习资料，带领我们攻坚克难！
 
+我学习了一些基本用法：
+
 - 使用 IDEA 创建一个 Spring Boot 项目，首先要配置相关环境
   - 需具备Java环境，在 Java 官方网站下载 JDK 8.0 及以上版本
   - 下载安装及配置 Maven 3.x
@@ -316,6 +318,54 @@ public interface FileService {
   //单次请求最大限制
       max-request-size: 2048
   ```
+
+#### 文件的上传和下载
+
+##### 文件上传
+
+对于上传文件，要将`MultipartFile`用作请求参数，此API应使用多部分表单数据值。
+
+```java
+@RestController
+public class FileUploadController {
+   @RequestMapping(value = "/upload", method = RequestMethod.POST, 
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+   public String fileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+      File convertFile = new File("/var/tmp/"+file.getOriginalFilename());
+      convertFile.createNewFile();
+      FileOutputStream fout = new FileOutputStream(convertFile);
+      fout.write(file.getBytes());
+      fout.close();
+      return "File is upload successfully";
+   }
+}
+```
+
+##### 文件下载
+
+对于文件下载，应该使用`InputStreamResource`下载文件。需要在`Response`中设置`HttpHeader Content-Disposition`，并且需要指定应用程序的响应`Media Type`。
+
+```java
+@RequestMapping(value = "/download", method = RequestMethod.GET) 
+public ResponseEntity<Object> downloadFile() throws IOException  {
+   String filename = "/var/tmp/mysql.png";
+   File file = new File(filename);
+   InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+   HttpHeaders headers = new HttpHeaders();
+
+   headers.add("Content-Disposition", String.format("attachment; filename=\\"%s\\"", file.getName()));
+   headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+   headers.add("Pragma", "no-cache");
+   headers.add("Expires", "0");
+
+   ResponseEntity<Object> 
+   responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
+      MediaType.parseMediaType("application/txt")).body(resource);
+
+   return responseEntity;
+}
+```
 
 ## 总结反思
 
