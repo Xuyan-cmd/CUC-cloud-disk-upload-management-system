@@ -435,3 +435,11 @@ spring-boot是由Pivotal团队提供的全新框架，其设计目的是用来�
 推荐安装IntelliJ IDEA，将本项目克隆至本地后，切换到rear_end分支，并在IDEA中打开，直接运行即可。
 
 ### 🔮课程结题报告与系统功能操作视频演示地址
+
+✍️**课程结题报告**：[课程结题报告](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/main/%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A/%E7%99%BE%E5%B7%9D.md)
+
+💽**系统功能操作视频演示地址:**[操作视频演示地址](https://reurl.cc/5ppvGq)
+
+💭**项目在线地址**：http://119.23.64.32/
+
+🎆**项目域名**：http://www.cucinstall.cn/（目前还在备案中。。。。。）
