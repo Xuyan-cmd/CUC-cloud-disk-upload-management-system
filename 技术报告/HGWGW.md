@@ -23,8 +23,6 @@
 
 我之前只用vue框架做过一个静态的登陆页面，所以对于vue框架只知皮毛，在此次实践中有了更深入的了解。
 
-Vue是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助我们高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。
-
 - **vue的两个核心功能**
 
   - 声明式渲染：Vue 基于标准 HTML 拓展了一套模板语法，使得我们可以声明式地描述最终输出的 HTML 和 JavaScript 状态之间的关系。
@@ -81,6 +79,54 @@ Vue是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML
   import App from './App.vue'
 
   const app = createApp(App)
+  ```
+
+  - 挂载一个应用
+
+  应用实例必须在调用了 `.mount()` 方法后才会渲染出来。该方法接收一个“容器”参数，可以是一个实际的 DOM 元素或是一个 CSS 选择器字符串：
+
+  ```html
+  <div id="app"></div>
+  ```
+
+  ```js
+  <div id="app"></div>
+  ```
+
+  应用根组件的内容将会被渲染在容器元素里面。容器元素自己将不会被视为应用的一部分。`.mount()` 方法应该始终在整个应用配置和资源注册完成后被调用。
+
+  > DOM 中的根组件模板
+
+  ```html
+  <div id="app">
+  <button @click="count++">{{ count }}</button>
+  </div>
+  ```
+
+  ```js
+  import { createApp } from 'vue'
+
+  const app = createApp({
+    data() {
+      return {
+        count: 0
+      }
+    }
+  })
+
+  app.mount('#app')
+  ```
+
+  当根组件没有设置 `template` 选项时，Vue 将自动使用容器的 `innerHTML` 作为模板。
+
+  - 应用配置
+
+  应用实例会暴露一个 `.config` 对象允许我们配置一些应用级的选项，例如定义一个应用级的错误处理器，它将捕获所有由子组件上抛而未被处理的错误：
+
+  ```js
+  app.config.errorHandler = (err) => {
+  /* 处理错误 */
+  }
   ```
 
 ### 后端开发
