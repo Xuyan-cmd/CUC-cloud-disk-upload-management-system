@@ -62,6 +62,12 @@
 
 **后端开发日志：**[后端工作日志](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/rear_end/README.md)
 
+### 🚀快速安装与使用方法说明
+
+#### 📒中传放心传使用文档
+
+#### 👉👉👉[中传放心传使用文档](https://nextjs-docs-xuyan-cmd.vercel.app/)👈👈👈
+
 ### 💻功能概览
 
 - 用户登录注册功能
@@ -359,96 +365,6 @@
     
     }
     ```
-
-### 🚀快速安装与使用方法说明
-
-#### **🌐前端vue框架环境搭建**：
-
-**1.安装node.js**
-
-可以从官网下载各种系统下的安装包，地址：[node.js官网](https://nodejs.org/zh-cn/)
-
-1）如果你是window系统，那简单了，直接下载.msi安装文件安装即可愉快的使用
-
-2）如果你是linux系统，那安装方式就很多了，具体可以参考：[node.js下载地址](https://nodejs.org/en/download/package-manager/)
-
-查看是否安装成功：
-
-```bash
-$node -v
-```
-
-**2.安装npm**
-
-目前nodejs版本已经集成安装npm的包管理工具，所以无需额外再安装,查看安装是否成功：
-
-```bash
-$npm -v                          
-```
-
-注意：国内网络情况，直接npm安装包可能难以实现，可以通过国内npm源进行安装，如：淘宝https://npm.taobao.org 方便起见，可安装他们定制的cnpm命令行工具来代替npm
-
-**同时推荐使用yarn管理工具**
-
-Yarn 是 Facebook, Google, Exponent 和 Tilde 开发的一款新的 JavaScript 包管理工具。就像我们可以从官方文档了解那样，它的目的是解决这些团队使用 npm 面临的少数问题，即：
-
-安装的时候无法保证速度/一致性 安全问题，因为 npm 安装时允许运行代码 我们可以用npm 下载yarn
-
-```
-npm install -g yarn
-```
-
-**3.安装vue-cli脚手架**
-
-```bash
-npm install -g @vue/cli
-# 或者
-yarn global add @vue/cli
-```
-
-检查vue-cli版本号命令： `vue --version`，不确定是否安装成功，可以输入检查版本号命令，如果没报错返回版本号，则说明安装成功。
-
-**4.安装项目所需的依赖包**
-
-将本项目git clone到本地后，通过`git bash`切换到`front_end`分支，在根目录下运行以下命令进行依赖安装：
-
-```bash
-npm install
-```
-
-**5.运行前端vue项目**
-
-安装依赖完毕后，执行以下语句：
-
-```bash
-npm run serve
-```
-
-即可运行前端项目（**具体实现功能若要本地运行需要后端项目在本地同时运行**）
-
-具体可供参考文档：[Vue.js官方文档](https://github.com/vuejs/vue)
-
-#### **🌐后端Springboot框架搭建：**
-
-spring-boot是由Pivotal团队提供的全新框架，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。通过这种方式，Boot致力于在蓬勃发展的快速应用开发领域（rapid application development）成为领导者。
-
-**1.配置对应的java环境**
-
-首先我们需要下载 java 开发工具包 JDK，下载地址：https://www.oracle.com/java/technologies/downloads/
-
-并在主机配置好对应的环境变量，具体可参考：[java官方安装配置说明](https://docs.oracle.com/en/java/javase/18/install/overview-jdk-installation.html)
-
-**2.在本地数据库创建本项目需要的表单（本项目数据库编写采用Mysql）**
-
-执行以下sql文件内容：
-
-[中传放心传数据库构建sql文件](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/rear_end/space-master/space.sql)
-
-根据本地数据库设定端口在后端文件的配置文件`application.properties`中写入对应的数据库账号、密码、接口，请确保端口能够正常调用。
-
-**3.运行springboot框架**
-
-推荐安装IntelliJ IDEA，将本项目克隆至本地后，切换到rear_end分支，并在IDEA中打开，直接运行即可。
 
 ### 🔮课程结题报告与系统功能操作视频演示地址
 
