@@ -62,7 +62,7 @@
 
 **后端开发日志：**[后端工作日志](https://github.com/Xuyan-cmd/CUC-cloud-disk-upload-management-system/blob/rear_end/README.md)
 
-### 📒中传放心传使用文档
+### 🚀快速上手使用
 
 #### 👉👉👉[中传放心传使用文档](https://nextjs-docs-xuyan-cmd.vercel.app/)👈👈👈
 
