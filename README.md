@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://s6.jpg.cm/2022/08/14/Pllqt4.png"  width="80px" height="80px">
+<img src="https://cdn.jsdelivr.net/gh/Xuyan-cmd/picture-bed/246x0w.png"  width="80px" height="80px">
 <h1 align="center">
     ☁️中传放心传（CUC-cloud-disk-upload-management-system）
   </h1>
